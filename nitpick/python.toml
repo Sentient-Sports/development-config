@@ -1,0 +1,49 @@
+[nitpick.files.present]
+".python-version" = "Setup an isolated virtual environment for this project: "
+"README.md" = "Create a README for this project"
+
+[nitpick.styles]
+include = []
+
+["pyproject.toml".tool.black]
+line-length = 100
+
+["pyproject.toml".tool.ruff]
+line-length = 120
+# https://beta.ruff.rs/docs/rules/
+select = [
+    "E", # pycodestyle
+    "F", # pyflakes
+    "I", # isort
+    "N", # pep8-naming
+    "D", # pydocstyle
+    "UP", # pyugrade
+    "ASYNC", # flake8-async
+    "S", # flake8-bandit
+    "B", # flake8-bugbear
+    "A", # flake8-builtins
+    "C4", # flake8-comprehensions
+    "DTZ", # flake8-datetimez
+    "ICN", # flake8-import-conventions
+    "Q", # flake8-quotes
+    "RSE", # flake8-raise
+    "SIM", # flake8-simplify
+    "ARG", # flake8-unused-arguments
+    "PLE", # pylint (errors)
+]
+ignore = [
+    "D100", # undocumented-public-module
+    "D101", # undocumented-public-class
+    "D102", # undocumented-public-method
+    "D103", # undocumented-public-function
+    "D104", # undocumented-public-package
+    "D106", # undocumented-public-nested-class
+    "D107", # undocumented-public-init
+    "D203", # one-blank-line-before-class
+    "D213", # multi-line-summary-second-line
+    "D401", # non-imperative-mood
+    "SIM114", # if-with-same-arms
+]
+
+["pyproject.toml".tool.ruff.flake8-builtins]
+builtins-ignorelist = ["id"]
