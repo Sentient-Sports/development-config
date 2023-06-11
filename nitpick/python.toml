@@ -1,5 +1,4 @@
 [nitpick.files.present]
-".python-version" = "Setup an isolated virtual environment for this project: "
 "README.md" = "Create a README for this project"
 
 [nitpick.styles]
