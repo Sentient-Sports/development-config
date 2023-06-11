@@ -29,6 +29,7 @@ select = [
     "SIM", # flake8-simplify
     "ARG", # flake8-unused-arguments
     "PLE", # pylint (errors)
+    "RUF", # ruff
 ]
 ignore = [
     "D100", # undocumented-public-module
