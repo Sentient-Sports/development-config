@@ -1,0 +1,42 @@
+name: check-python
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        description: 'Version of Python to use to run checks'
+        default: '3.10'
+        required: false
+        type: string
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  check-config:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: ${{ inputs.python-version }}
+    - run: pip install -r requirements-ci.txt
+    - run: python -m nitpick check
+
+  check-style:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: ${{ inputs.python-version }}
+    - run: pip install -r requirements-ci.txt
+    - run: python -m black --check .
+
+  check-lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: ${{ inputs.python-version }}
+    - run: pip install -r requirements-ci.txt
+    - run: python -m ruff check .
