@@ -8,7 +8,7 @@ include = []
 line-length = 100
 
 ["pyproject.toml".tool.ruff]
-line-length = 120
+line-length = 100
 # https://beta.ruff.rs/docs/rules/
 select = [
     "E", # pycodestyle
@@ -41,6 +41,7 @@ ignore = [
     "D203", # one-blank-line-before-class
     "D213", # multi-line-summary-second-line
     "D401", # non-imperative-mood
+    "E501", # line-too-long [black will take care of this]
     "SIM114", # if-with-same-arms
 ]
 
