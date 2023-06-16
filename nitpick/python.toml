@@ -43,6 +43,7 @@ ignore = [
     "D213", # multi-line-summary-second-line
     "D401", # non-imperative-mood
     "E501", # line-too-long [black will take care of this]
+    "E712", # true-false-comparison [false positives]
     "SIM114", # if-with-same-arms
 ]
 
