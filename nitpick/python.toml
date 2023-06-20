@@ -49,3 +49,8 @@ ignore = [
 
 ["pyproject.toml".tool.ruff.flake8-builtins]
 builtins-ignorelist = ["id"]
+
+["pyproject.toml".tool.ruff.pep8-naming]
+ignore-names = [
+    "X",  # e.g. sklearn
+]
