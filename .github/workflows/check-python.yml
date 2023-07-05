@@ -1,12 +1,5 @@
 name: check-python
-on:
-  workflow_call:
-    inputs:
-      python-version:
-        description: 'Version of Python to use to run checks'
-        default: '3.10'
-        required: false
-        type: string
+on: [workflow_call]
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
@@ -16,9 +9,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
-      with:
-        python-version: ${{ inputs.python-version }}
-    - run: pip install -r requirements-ci.txt
+    - run: pip install nitpick
     - run: python -m nitpick check
 
   check-style:
@@ -26,9 +17,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
-      with:
-        python-version: ${{ inputs.python-version }}
-    - run: pip install -r requirements-ci.txt
+    - run: pip install black
     - run: python -m black --check .
 
   check-lint:
@@ -36,7 +25,15 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
-      with:
-        python-version: ${{ inputs.python-version }}
-    - run: pip install -r requirements-ci.txt
+    - run: pip install ruff
     - run: python -m ruff check .
+
+  check-types:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@0d5da6a89a3aa5b4dbd48e38b0c9d678b0caa0e5
+        with:
+          python-version-file: 'pyproject.toml'
+      - run: pip install -r requirements-dev.txt
+      - run: python -m pyright .
