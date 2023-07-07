@@ -47,6 +47,9 @@ ignore = [
     "E712", # true-false-comparison [false positives]
     "SIM114", # if-with-same-arms
 ]
+extend-exclude = [
+    "typings" # directory containing typing stubs
+]
 
 ["pyproject.toml".tool.ruff.flake8-builtins]
 builtins-ignorelist = ["id"]
