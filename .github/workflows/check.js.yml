@@ -1,0 +1,42 @@
+name: check-js
+on:
+  workflow_call:
+    inputs:
+      project-path:
+        default: '.'
+        required: false
+        type: string
+      enable-tests:
+        default: true
+        required: false
+        type: boolean
+concurrency:
+  group: '${{ inputs.project-path }} ${{ github.ref }}'
+  cancel-in-progress: true
+jobs:
+  check-lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.project-path }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version-file: '${{ inputs.project-path }}/package.json'
+    - run: yarn install
+    - run: yarn lint
+
+  check-tests:
+    if: ${{ inputs.enable-tests }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.project-path }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version-file: '${{ inputs.project-path }}/package.json'
+    - run: yarn install
+    - run: yarn test
