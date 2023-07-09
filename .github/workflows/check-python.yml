@@ -6,6 +6,10 @@ on:
         default: '.'
         required: false
         type: string
+      enable-type-check:
+        default: true
+        required: false
+        type: boolean
 concurrency:
   group: '${{ inputs.project-path }} ${{ github.ref }}'
   cancel-in-progress: true
@@ -44,6 +48,7 @@ jobs:
     - run: python -m ruff check .
 
   check-types:
+    if: ${{ inputs.enable-type-check }}
     runs-on: ubuntu-latest
     defaults:
       run:
