@@ -1,19 +1,31 @@
 name: check-python
-on: [workflow_call]
+on:
+  workflow_call:
+    inputs:
+      project-path:
+        default: '.'
+        required: false
+        type: string
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
 jobs:
   check-config:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.project-path }}
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
     - run: pip install nitpick
-    - run: python -m nitpick check
+    - run: python -m nitpick check .
 
   check-style:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.project-path }}
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -22,6 +34,9 @@ jobs:
 
   check-lint:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.project-path }}
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -30,10 +45,14 @@ jobs:
 
   check-types:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.project-path }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@0d5da6a89a3aa5b4dbd48e38b0c9d678b0caa0e5
         with:
-          python-version-file: 'pyproject.toml'
+          python-version-file: '${{ inputs.project-path }}/pyproject.toml'
       - run: pip install -r requirements-dev.txt
       - run: python -m pyright .
+
