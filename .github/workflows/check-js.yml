@@ -45,7 +45,9 @@ jobs:
         working-directory: ${{ inputs.project-path }}
     steps:
     - uses: aws-actions/configure-aws-credentials@v2
-      if: ${{ secrets.aws-role != null }}
+      env: 
+          USE_AWS: ${{ secrets.aws-role }}
+      if: ${{ env.USE_AWS != '' }}
       with:
         role-to-assume: ${{ secrets.aws-role }}
         aws-region: ${{ inputs.aws-region }}
