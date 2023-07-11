@@ -10,13 +10,13 @@ on:
         default: true
         required: false
         type: boolean
-      aws-role:
-        required: false
-        type: string
       aws-region:
         default: 'eu-west-1'
         required: false
         type: string
+    secrets:
+      aws-role:
+        required: false
 concurrency:
   group: '${{ inputs.project-path }} ${{ github.ref }}'
   cancel-in-progress: true
@@ -45,9 +45,9 @@ jobs:
         working-directory: ${{ inputs.project-path }}
     steps:
     - uses: aws-actions/configure-aws-credentials@v2
-      if: ${{ inputs.aws-role != null }}
+      if: ${{ secrets.aws-role != null }}
       with:
-        role-to-assume: ${{ inputs.aws-role }}
+        role-to-assume: ${{ secrets.aws-role }}
         aws-region: ${{ inputs.aws-region }}
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
