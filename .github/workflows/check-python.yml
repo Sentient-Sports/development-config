@@ -10,6 +10,10 @@ on:
         default: true
         required: false
         type: boolean
+      enable-tests:
+        default: true
+        required: false
+        type: boolean
 concurrency:
   group: '${{ inputs.project-path }} ${{ github.ref }}'
   cancel-in-progress: true
@@ -60,4 +64,18 @@ jobs:
           python-version-file: '${{ inputs.project-path }}/pyproject.toml'
       - run: pip install -r requirements-dev.txt
       - run: python -m pyright .
+  
+  check-tests:
+    if: ${{ inputs.enable-tests }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.project-path }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@0d5da6a89a3aa5b4dbd48e38b0c9d678b0caa0e5
+        with:
+          python-version-file: '${{ inputs.project-path }}/pyproject.toml'
+      - run: pip install -r requirements-dev.txt
+      - run: python -m pytest .
 
