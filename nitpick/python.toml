@@ -31,6 +31,7 @@ select = [
     "ARG", # flake8-unused-arguments
     "PLE", # pylint (errors)
     "RUF", # ruff
+    "PD", # pandas-vet
 ]
 ignore = [
     "D100", # undocumented-public-module
@@ -46,6 +47,10 @@ ignore = [
     "E501", # line-too-long [black will take care of this]
     "E712", # true-false-comparison [false positives]
     "SIM114", # if-with-same-arms
+    "PD010", # pandas-use-of-dot-pivot-or-unstack
+    "PD013", # pandas-use-of-dot-stack
+    "PD015", # pandas-use-of-pd-merge
+    "PD901", # pandas-df-variable-name
 ]
 extend-exclude = [
     "typings" # directory containing typing stubs
