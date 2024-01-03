@@ -24,16 +24,18 @@ select = [
     "A", # flake8-builtins
     "C4", # flake8-comprehensions
     "DTZ", # flake8-datetimez
+    "ISC", # flake8-implicit-str-concat
     "ICN", # flake8-import-conventions
     "Q", # flake8-quotes
     "RSE", # flake8-raise
     "SIM", # flake8-simplify
     "ARG", # flake8-unused-arguments
+    "PD", # pandas-vet
     "PLE", # pylint (errors)
     "RUF", # ruff
-    "PD", # pandas-vet
 ]
 ignore = [
+    "B028", # no-explicit-stacklevel
     "D100", # undocumented-public-module
     "D101", # undocumented-public-class
     "D102", # undocumented-public-method
@@ -46,11 +48,13 @@ ignore = [
     "D401", # non-imperative-mood
     "E501", # line-too-long [black will take care of this]
     "E712", # true-false-comparison [false positives]
-    "SIM114", # if-with-same-arms
+    "ISC003", # explicit-string-concatenation
     "PD010", # pandas-use-of-dot-pivot-or-unstack
     "PD013", # pandas-use-of-dot-stack
     "PD015", # pandas-use-of-pd-merge
     "PD901", # pandas-df-variable-name
+    "S101", # assert
+    "SIM114", # if-with-same-arms
 ]
 extend-exclude = [
     "typings" # directory containing typing stubs
@@ -58,6 +62,9 @@ extend-exclude = [
 
 ["pyproject.toml".tool.ruff.flake8-builtins]
 builtins-ignorelist = ["id"]
+
+["pyproject.toml".tool.ruff.flake8-implicit-str-concat]
+allow-multiline = false
 
 ["pyproject.toml".tool.ruff.pep8-naming]
 ignore-names = [
