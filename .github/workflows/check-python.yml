@@ -65,7 +65,7 @@ jobs:
         with:
           token: ${{ secrets.GH_SUBMODULES_PAT || github.token }}
           submodules: true
-      - uses: actions/setup-python@0d5da6a89a3aa5b4dbd48e38b0c9d678b0caa0e5
+      - uses: actions/setup-python@v5
         with:
           python-version-file: '${{ inputs.project-path }}/pyproject.toml'
       - run: pip install -r requirements-dev.txt
@@ -82,7 +82,7 @@ jobs:
         with:
           token: ${{ secrets.GH_SUBMODULES_PAT || github.token }}
           submodules: true
-      - uses: actions/setup-python@0d5da6a89a3aa5b4dbd48e38b0c9d678b0caa0e5
+      - uses: actions/setup-python@v5
         with:
           python-version-file: '${{ inputs.project-path }}/pyproject.toml'
       - run: pip install -r requirements-dev.txt
