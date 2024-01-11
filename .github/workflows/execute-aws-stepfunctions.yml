@@ -1,0 +1,87 @@
+name: execute-aws-stepfunctions
+on:
+  workflow_call:
+    inputs:
+      state-machine-arn:
+        required: true
+        type: string
+      trigger-label:
+        required: false
+        type: string
+    secrets:
+      AWS_ROLE:
+        required: true
+      GH_SUBMODULES_PAT:
+        required: false
+
+concurrency:
+  group: '${{ inputs.state-machine-arn }} ${{ github.ref }}'
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+
+    env:
+      STATE_MACHINE_ARN: ${{ inputs.state-machine-arn }}
+      STATE_MACHINE_EXECUTION_NAME: git_${{ github.sha }}
+
+    steps:
+
+    - name: Check for label
+      if: inputs.trigger-label != null && !contains(github.event.pull_request.labels.*.name, inputs.trigger-label)
+      run: exit 1
+
+    - uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ secrets.AWS_ROLE }}
+        aws-region: 'eu-west-1'
+
+    - uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GH_SUBMODULES_PAT || github.token }}
+        submodules: true
+
+    - name: Invoke pipeline
+      id: start_execution
+      run: |
+        isoDate=$(date -u +"%Y%m%dT%H%M%SZ")
+        executionArn=$(aws stepfunctions start-execution --state-machine-arn $STATE_MACHINE_ARN --name ${STATE_MACHINE_EXECUTION_NAME}_${isoDate} --input "{\"CommitId\": \"${{ github.sha }}\", \"OutputSuffix\": \"pr/${{ github.sha }}/\"}" | jq -r '.executionArn')
+        executionUrl="https://eu-west-1.console.aws.amazon.com/states/home?region=eu-west-1#/v2/executions/details/$executionArn?tab=definition"
+        echo "Step Functions execution started with ARN: $executionArn"
+        echo "Execution available at URL: $executionUrl"
+        echo "executionArn=$executionArn" >> $GITHUB_OUTPUT
+        echo "### Pipeline" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "$executionUrl" >> $GITHUB_STEP_SUMMARY
+
+    - name: Monitor execution
+      run: |
+        executionArn="${{ steps.start_execution.outputs.executionArn }}"
+        status=""
+        while [ "$status" != "SUCCEEDED" ] && [ "$status" != "FAILED" ] && [ "$status" != "TIMED_OUT" ] && [ "$status" != "ABORTED" ]; do
+            status=$(aws stepfunctions describe-execution --execution-arn "$executionArn" | jq -r '.status')
+            echo "Step Functions execution status: $status"
+            sleep 30
+        done
+        if [ "$status" == "SUCCEEDED" ]; then
+            echo "Step Functions execution succeeded!"
+        else
+            echo "Step Functions execution failed with status: $status"
+            exit 1
+        fi
+
+    - name: Cancel execution
+      if: cancelled()
+      run: |
+        executionArn="${{ steps.start_execution.outputs.executionArn }}"
+        if [ -n "$executionArn" ]; then
+            echo "Cancelling Step Functions execution: $executionArn"
+            aws stepfunctions stop-execution --execution-arn "$executionArn"
+            echo "Step Functions execution cancelled."
+        fi
+
