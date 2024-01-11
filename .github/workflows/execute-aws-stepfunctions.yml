@@ -65,7 +65,7 @@ jobs:
       id: start_execution
       run: |
         isoDate=$(date -u +"%Y%m%dT%H%M%SZ")
-        executionArn=$(aws stepfunctions start-execution --state-machine-arn $STATE_MACHINE_ARN --name ${STATE_MACHINE_EXECUTION_NAME}_${isoDate} --input "{\"CommitId\": \"${{ github.sha }}\", \"OutputSuffix\": \"pr/${{ github.sha }}/\"}" | jq -r '.executionArn')
+        executionArn=$(aws stepfunctions start-execution --state-machine-arn $STATE_MACHINE_ARN --name ${STATE_MACHINE_EXECUTION_NAME}_${isoDate} --input "{\"CommitId\": \"${{ github.event.pull_request.head.sha }}\", \"OutputSuffix\": \"pr/${{ github.event.pull_request.head.sha }}/\"}" | jq -r '.executionArn')
         executionUrl="https://eu-west-1.console.aws.amazon.com/states/home?region=eu-west-1#/v2/executions/details/$executionArn?tab=definition"
         echo "Step Functions execution started with ARN: $executionArn"
         echo "Execution available at URL: $executionUrl"
