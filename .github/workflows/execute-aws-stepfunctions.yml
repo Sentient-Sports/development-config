@@ -5,9 +5,10 @@ on:
       state-machine-arn:
         required: true
         type: string
-      fail-fast:
+      trigger-label:
         required: false
-        type: boolean
+        type: string
+        default: ready-to-test
     secrets:
       AWS_ROLE:
         required: true
@@ -21,6 +22,7 @@ concurrency:
 permissions:
   contents: read
   id-token: write
+  pull-requests: read
 
 jobs:
   execute:
@@ -32,9 +34,22 @@ jobs:
 
     steps:
 
-    - name: Fail fast if requested
-      if: inputs.fail-fast == true
-      run: exit 1
+    - name: Check for trigger label
+      uses: actions/github-script@v7
+      if: always()
+      with:
+        script: |
+          const response = await github.rest.pulls.get({
+            pull_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo
+          })
+          for (const label of response.data.labels) {
+            if (label.name == '${{ inputs.trigger-label }}') {
+              return
+            }
+          }
+          throw new Error('Pull request is not ready to test.')
 
     - uses: aws-actions/configure-aws-credentials@v4
       with:
