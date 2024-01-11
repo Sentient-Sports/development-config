@@ -30,7 +30,7 @@ jobs:
 
     env:
       STATE_MACHINE_ARN: ${{ inputs.state-machine-arn }}
-      STATE_MACHINE_EXECUTION_NAME: git_${{ github.sha }}
+      STATE_MACHINE_EXECUTION_NAME: git_${{ github.event.pull_request.head.sha }}
 
     steps:
 
