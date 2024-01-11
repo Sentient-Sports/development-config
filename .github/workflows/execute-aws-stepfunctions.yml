@@ -5,9 +5,9 @@ on:
       state-machine-arn:
         required: true
         type: string
-      trigger-label:
+      fail-fast:
         required: false
-        type: string
+        type: boolean
     secrets:
       AWS_ROLE:
         required: true
@@ -32,8 +32,8 @@ jobs:
 
     steps:
 
-    - name: Check for label
-      if: inputs.trigger-label != null && !contains(github.event.pull_request.labels.*.name, inputs.trigger-label)
+    - name: Fail fast if requested
+      if: inputs.fail-fast == true
       run: exit 1
 
     - uses: aws-actions/configure-aws-credentials@v4
@@ -84,4 +84,3 @@ jobs:
             aws stepfunctions stop-execution --execution-arn "$executionArn"
             echo "Step Functions execution cancelled."
         fi
-
