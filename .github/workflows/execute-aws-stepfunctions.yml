@@ -54,6 +54,7 @@ jobs:
     - uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ secrets.AWS_ROLE }}
+        role-duration-seconds: 21600
         aws-region: 'eu-west-1'
 
     - uses: actions/checkout@v3
