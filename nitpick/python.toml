@@ -36,6 +36,7 @@ select = [
 ]
 ignore = [
     "B028", # no-explicit-stacklevel
+    "C408", # unnecessary-collection-call
     "D100", # undocumented-public-module
     "D101", # undocumented-public-class
     "D102", # undocumented-public-method
