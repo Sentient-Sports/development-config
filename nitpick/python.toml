@@ -59,7 +59,7 @@ ignore = [
 ]
 extend-exclude = [
     "typings", # directory containing typing stubs
-    ".ipynb"  # jupyter notebooks
+    "*.ipynb"  # jupyter notebooks
 ]
 
 ["pyproject.toml".tool.ruff.flake8-builtins]
