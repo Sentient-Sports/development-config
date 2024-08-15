@@ -58,7 +58,8 @@ ignore = [
     "SIM114", # if-with-same-arms
 ]
 extend-exclude = [
-    "typings" # directory containing typing stubs
+    "typings", # directory containing typing stubs
+    ".ipynb"  # jupyter notebooks
 ]
 
 ["pyproject.toml".tool.ruff.flake8-builtins]
