@@ -9,6 +9,12 @@ line-length = 100
 
 ["pyproject.toml".tool.ruff]
 line-length = 100
+extend-exclude = [
+    "typings", # directory containing typing stubs
+    "*.ipynb"  # jupyter notebooks
+]
+
+["pyproject.toml".tool.ruff.lint]
 # https://beta.ruff.rs/docs/rules/
 select = [
     "E", # pycodestyle [errors]
@@ -57,18 +63,14 @@ ignore = [
     "S101", # assert
     "SIM114", # if-with-same-arms
 ]
-extend-exclude = [
-    "typings", # directory containing typing stubs
-    "*.ipynb"  # jupyter notebooks
-]
 
-["pyproject.toml".tool.ruff.flake8-builtins]
+["pyproject.toml".tool.ruff.lint.flake8-builtins]
 builtins-ignorelist = ["id"]
 
-["pyproject.toml".tool.ruff.flake8-implicit-str-concat]
+["pyproject.toml".tool.ruff.lint.flake8-implicit-str-concat]
 allow-multiline = false
 
-["pyproject.toml".tool.ruff.pep8-naming]
+["pyproject.toml".tool.ruff.lint.pep8-naming]
 ignore-names = [
     "X",  # e.g. sklearn
 ]
